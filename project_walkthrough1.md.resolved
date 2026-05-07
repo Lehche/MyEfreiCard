@@ -1,0 +1,86 @@
+# MyEfreiCard — Project Walkthrough
+
+## Overview
+A **Kotlin Android** app built with **Jetpack Compose** and **Material 3** — a digital student ID card for Efrei Paris that replaces the physical card with a modern mobile experience.
+
+## Architecture
+
+```mermaid
+graph TD
+    A[MainActivity] --> B[MainScreen - Scaffold]
+    B --> C[Floating BottomNavBar]
+    B --> D[NavGraph]
+    D --> E[CardScreen]
+    D --> F[ProfileScreen]
+    D --> G[ScheduleScreen]
+    D --> H[AccessScreen]
+    E --> I[SampleData]
+    F --> I
+    G --> I
+    H --> I
+```
+
+## Project Structure
+
+| File | Purpose |
+|------|---------|
+| [settings.gradle.kts](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/settings.gradle.kts) | Root project settings |
+| [build.gradle.kts](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/build.gradle.kts) | Root build config |
+| [app/build.gradle.kts](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/build.gradle.kts) | App module with Compose dependencies |
+| [libs.versions.toml](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/gradle/libs.versions.toml) | Version catalog |
+| [AndroidManifest.xml](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/AndroidManifest.xml) | Manifest with NFC permission |
+| [MainActivity.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/MainActivity.kt) | Entry point + floating bottom nav |
+| [StudentData.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/data/StudentData.kt) | Data models + sample data |
+| [CardScreen.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/ui/screens/CardScreen.kt) | Digital ID card + NFC animation |
+| [ProfileScreen.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/ui/screens/ProfileScreen.kt) | Student profile sections |
+| [ScheduleScreen.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/ui/screens/ScheduleScreen.kt) | Class schedule + course cards |
+| [AccessScreen.kt](file:///home/gaspard/Documents/Antigravity/MyEfreiCard/app/src/main/java/com/comind/myefreicard/ui/screens/AccessScreen.kt) | Facility access list |
+
+## 4 Screens
+
+### 🪪 Card Screen
+- Blue-to-purple gradient student ID card
+- Animated **pulsing NFC scan button** with concentric ring animation
+- Student info (name, program, ID, year, INE)
+- Validity date + enrollment/status chips
+
+### 👤 Profile Screen  
+- Gradient header banner with avatar
+- **Contact Information** — email, phone, address
+- **Academic Information** — student ID, year, DOB, GPA, major, minor, dates
+- **Emergency Contact** — name, relationship, phone
+
+### 📅 Schedule Screen
+- Gradient summary banner (total credits + total courses)
+- Course cards with code, day badges, credits circle, professor, time, location
+
+### 🔐 Access Screen
+- Green gradient "All Facilities Active" status banner
+- Facility cards with colored icons (Library, Gym, Dining, Lab, Health, Auditorium)
+- Active status indicators + hours
+
+## Visual Design Features
+- 🎨 **Blue→Purple gradient** card & banners
+- ✨ **Animated pulsing NFC button** with infinite transition
+- 🏗️ **Floating bottom nav bar** with rounded corners and shadow
+- 🎯 **Color-coded facility icons** with background circles
+- 📐 **Consistent card shadows** with colored ambient light
+- 🔄 **Smooth nav transitions** with animated color changes
+
+## How to Build
+
+> [!IMPORTANT]
+> Open the project in **Android Studio** (Hedgehog or later recommended).
+
+1. Open Android Studio → `File > Open` → select `/home/gaspard/Documents/Antigravity/MyEfreiCard/`
+2. Wait for Gradle sync to complete (it will download the wrapper + dependencies)
+3. Connect a device or start an emulator (API 26+)
+4. Click **Run ▶️**
+
+## Tech Stack
+- **Kotlin** 1.9.22
+- **Jetpack Compose** (BOM 2024.02.00)
+- **Material 3** with custom theme
+- **Navigation Compose** for screen routing
+- **Material Icons Extended** for rich iconography
+- **Adaptive Icons** for launcher
