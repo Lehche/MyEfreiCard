@@ -10,7 +10,7 @@ import com.comind.myefreicard.ui.screens.ProfileScreen
 import com.comind.myefreicard.ui.screens.ScheduleScreen
 
 @Composable
-fun NavGraph(navController: NavHostController) {
+fun NavGraph(navController: NavHostController, onLogoutTriggered: () -> Unit) {
     NavHost(
         navController = navController,
         startDestination = BottomNavItem.Card.route
@@ -19,7 +19,7 @@ fun NavGraph(navController: NavHostController) {
             CardScreen()
         }
         composable(BottomNavItem.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(onLogoutTriggered = onLogoutTriggered)
         }
         composable(BottomNavItem.Schedule.route) {
             ScheduleScreen()

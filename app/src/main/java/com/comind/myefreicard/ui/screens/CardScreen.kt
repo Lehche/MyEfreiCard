@@ -28,12 +28,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.comind.myefreicard.data.SampleData
+import com.comind.myefreicard.data.SessionManager
 import com.comind.myefreicard.ui.theme.*
 
 @Composable
 fun CardScreen() {
-    val student = SampleData.student
+    val student = SessionManager.currentStudent
+    val profile = SessionManager.currentProfile
     val scrollState = rememberScrollState()
 
     Column(
@@ -53,7 +54,7 @@ fun CardScreen() {
             modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
-            text = "University Student Card",
+            text = "Carte Étudiante Numérique",
             style = MaterialTheme.typography.bodyMedium,
             color = TextBlue,
             modifier = Modifier.padding(bottom = 20.dp)
@@ -112,7 +113,7 @@ fun CardScreen() {
                         .padding(horizontal = 20.dp),
                     verticalAlignment = Alignment.Top
                 ) {
-                    // Photo placeholder
+                    // Dynamic Profile Photo placeholder
                     Box(
                         modifier = Modifier
                             .size(80.dp)
@@ -120,7 +121,7 @@ fun CardScreen() {
                             .background(Color.White.copy(alpha = 0.3f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("👤", fontSize = 36.sp)
+                        Text(profile.avatarEmoji, fontSize = 38.sp)
                     }
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -190,13 +191,13 @@ fun CardScreen() {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             InfoChipCard(
-                label = "Enrollment Date",
-                value = "Sep 2022",
+                label = "Date d'inscription",
+                value = student.enrollmentDate,
                 modifier = Modifier.weight(1f)
             )
             InfoChipCard(
-                label = "Status",
-                value = "● Active",
+                label = "Statut",
+                value = "● Actif",
                 valueColor = StatusActive,
                 modifier = Modifier.weight(1f)
             )

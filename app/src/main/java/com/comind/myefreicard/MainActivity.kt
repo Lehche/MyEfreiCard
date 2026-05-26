@@ -1,7 +1,6 @@
 package com.comind.myefreicard
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -11,6 +10,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,27 +21,87 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.comind.myefreicard.data.SessionManager
 import com.comind.myefreicard.navigation.NavGraph
 import com.comind.myefreicard.navigation.bottomNavItems
+import com.comind.myefreicard.ui.screens.AuthScreen
+import com.comind.myefreicard.ui.screens.FingerprintScreen
 import com.comind.myefreicard.ui.theme.*
 
-class MainActivity : ComponentActivity() {
+enum class AppState {
+    UNAUTHENTICATED,
+    LOCKED,
+    UNLOCKED
+}
+
+class MainActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Initialize persistent session storage
+        SessionManager.init(this)
+        
         setContent {
             MyEfreiCardTheme {
-                MainScreen()
+                // Root state machine checking session persistence and biometric preferences
+                var appState by remember {
+                    mutableStateOf(
+                        if (!SessionManager.isLoggedIn) {
+                            AppState.UNAUTHENTICATED
+                        } else if (SessionManager.isBiometricsEnabled) {
+                            AppState.LOCKED
+                        } else {
+                            AppState.UNLOCKED
+                        }
+                    )
+                }
+
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    when (appState) {
+                        AppState.UNAUTHENTICATED -> {
+                            AuthScreen(
+                                onLoginSuccess = {
+                                    // Dynamic unlock on successful SSO verification
+                                    appState = AppState.UNLOCKED
+                                }
+                            )
+                        }
+                        AppState.LOCKED -> {
+                            FingerprintScreen(
+                                onUnlockSuccess = {
+                                    appState = AppState.UNLOCKED
+                                },
+                                onLogoutTriggered = {
+                                    SessionManager.logout()
+                                    appState = AppState.UNAUTHENTICATED
+                                }
+                            )
+                        }
+                        AppState.UNLOCKED -> {
+                            MainScreen(
+                                onLogoutTriggered = {
+                                    SessionManager.logout()
+                                    appState = AppState.UNAUTHENTICATED
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(onLogoutTriggered: () -> Unit) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -122,7 +184,7 @@ fun MainScreen() {
         containerColor = BackgroundLight
     ) { paddingValues ->
         Box(modifier = Modifier.padding(paddingValues)) {
-            NavGraph(navController = navController)
+            NavGraph(navController = navController, onLogoutTriggered = onLogoutTriggered)
         }
     }
 }

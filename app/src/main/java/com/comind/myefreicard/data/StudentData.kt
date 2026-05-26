@@ -11,9 +11,7 @@ data class Student(
     val phone: String,
     val address: String,
     val dateOfBirth: String,
-    val gpa: String,
-    val major: String,
-    val minor: String,
+    val moyenneGenerale: String,
     val enrollmentDate: String,
     val expectedGraduation: String,
     val validUntil: String,
@@ -35,58 +33,126 @@ data class Course(
 
 data class Facility(
     val name: String,
+    val campus: String,
+    val building: String,
     val type: String,
-    val isActive: Boolean,
-    val hours: String,
+    val openHour: Int,    // hour in 24h Paris time
+    val openMinute: Int,
+    val closeHour: Int,
+    val closeMinute: Int,
     val iconType: FacilityIcon
 )
 
 enum class FacilityIcon {
-    LIBRARY, GYM, DINING, LAB, HEALTH, AUDITORIUM
+    GYM, DANCE, DINING, LAB, HUB, CAFE
 }
 
 object SampleData {
     val student = Student(
-        firstName = "Emma",
-        lastName = "Johnson",
-        program = "PGE",
-        studentId = "2024-ST-15892",
-        year = "I-1 2022 - 2027",
+        firstName = "Gaspard",
+        lastName = "Dupont",
+        program = "Prépa Intégrée",
+        studentId = "20241122",
+        year = "2ème année - Prépa",
         ine = "1234567890A",
-        email = "emma.johnson@university.edu",
-        phone = "+1 (555) 123-4567",
-        address = "123 Campus Drive, Apt 4B\nBoston, MA 02115",
-        dateOfBirth = "June 15, 2003",
-        gpa = "3.78 / 4.0",
-        major = "Computer Science",
-        minor = "Mathematics",
-        enrollmentDate = "Sep 1, 2022",
-        expectedGraduation = "2026-05",
-        validUntil = "2026-05",
+        email = "gaspard.dupont@efrei.net",
+        phone = "+33 6 11 22 33 44",
+        address = "12 rue Linné\n75005 Paris",
+        dateOfBirth = "15/06/2003",
+        moyenneGenerale = "15/20",
+        enrollmentDate = "1 sept. 2024",
+        expectedGraduation = "05/2029",
+        validUntil = "05/2029",
         status = "Active",
-        emergencyContactName = "Michael Johnson",
-        emergencyContactRelation = "Father",
-        emergencyContactPhone = "+1 (555) 987-6543"
+        emergencyContactName = "Marie Dupont",
+        emergencyContactRelation = "Mère",
+        emergencyContactPhone = "+33 6 74 85 91 32"
     )
 
     val courses = listOf(
-        Course("CS 301", "Data Structures", "Dr. Sarah Chen", "9:00 AM - 10:15 AM", "Engineering Hall 205", "MWF", 4),
-        Course("CS 340", "Database Systems", "Prof. James Martinez", "1:00 PM - 2:30 PM", "Tech Center 112", "TTh", 3),
-        Course("MATH 250", "Linear Algebra", "Dr. Lisa Wang", "11:00 AM - 12:15 PM", "Math Building 301", "MWF", 3),
-        Course("CS 355", "Software Engineering", "Dr. Robert Kim", "3:00 PM - 4:15 PM", "Engineering Hall 110", "TTh", 3),
-        Course("ENG 201", "Technical Writing", "Prof. Maria Garcia", "2:00 PM - 2:50 PM", "Humanities 205", "MWF", 4)
+        Course("SM403I-2526PSP01", "Data Analysis", "", "", "", "", 3),
+        Course("SM402I-2526PSP01", "Finite Automata and Regular Expressions", "", "", "", "", 3),
+        Course("SM401I-2526PSP01", "Mathematical Modeling", "", "", "", "", 3),
+        Course("TI404I-2526PSP01", "Databases 1: Basic Concepts", "", "", "", "", 3),
+        Course("TI403I-2526PSP01", "Java 1: Fundamentals of OOP", "", "", "", "", 3),
+        Course("TI402I-2526PSP01", "Web Programming 1: HTML, CSS, JS", "", "", "", "", 3),
+        Course("SP401I-2526PSP01", "Electromagnetic Propagation", "", "", "", "", 3),
+        Course("SP402I-2526PSP01", "Thermodynamics", "", "", "", "", 3),
+        Course("TE403I-2526PSP01", "Transmission Channels", "", "", "", "", 3),
+        Course("FH401-2526PSP01", "Démocratie et Engagement - Dissertation et plaidoyer", "", "", "", "", 2),
+        Course("FE402I-2526PSP01", "Economics", "", "", "", "", 2),
+        Course("FL401-2526PSP01", "English 4 - Preparation for the Study Abroad Program", "", "", "", "", 2)
     )
 
+    // All campuses / facilities
+    // openHour/closeHour are Paris local time (24h)
     val facilities = listOf(
-        Facility("Main Library", "Library", true, "24/7", FacilityIcon.LIBRARY),
-        Facility("Recreation Center", "Gym", true, "6 AM - 11 PM", FacilityIcon.GYM),
-        Facility("Student Union", "Dining", true, "7 AM - 10 PM", FacilityIcon.DINING),
-        Facility("Computer Lab - Tech Building", "Lab", true, "24/7", FacilityIcon.LAB),
-        Facility("Health Center", "Health", true, "8 AM - 6 PM", FacilityIcon.HEALTH),
-        Facility("Main Auditorium", "Auditorium", true, "8 AM - 10 PM", FacilityIcon.AUDITORIUM)
+        Facility(
+            name = "Gym",
+            campus = "Site New Republic",
+            building = "Bât. N",
+            type = "Sport",
+            openHour = 6, openMinute = 30,
+            closeHour = 21, closeMinute = 30,
+            iconType = FacilityIcon.GYM
+        ),
+        Facility(
+            name = "Dance Room",
+            campus = "Site New Republic",
+            building = "Bât. N",
+            type = "Sport",
+            openHour = 6, openMinute = 30,
+            closeHour = 21, closeMinute = 30,
+            iconType = FacilityIcon.DANCE
+        ),
+        Facility(
+            name = "Crous",
+            campus = "Site La Maison",
+            building = "Bât. A (Sous-sol)",
+            type = "Restauration",
+            openHour = 10, openMinute = 30,
+            closeHour = 15, closeMinute = 30,
+            iconType = FacilityIcon.DINING
+        ),
+        Facility(
+            name = "Innovation Lab",
+            campus = "Site La Maison",
+            building = "Bât. I",
+            type = "Laboratoire",
+            openHour = 7, openMinute = 30,
+            closeHour = 20, closeMinute = 0,
+            iconType = FacilityIcon.LAB
+        ),
+        Facility(
+            name = "Student Hub",
+            campus = "Site La Maison",
+            building = "Bât. F",
+            type = "Espace étudiant",
+            openHour = 7, openMinute = 30,
+            closeHour = 20, closeMinute = 0,
+            iconType = FacilityIcon.HUB
+        ),
+        Facility(
+            name = "Lunch & Espace Coworking",
+            campus = "Site La Factory",
+            building = "Bât. H",
+            type = "Restauration & Coworking",
+            openHour = 7, openMinute = 30,
+            closeHour = 20, closeMinute = 0,
+            iconType = FacilityIcon.DINING
+        ),
+        Facility(
+            name = "K-Fet",
+            campus = "Site La Maison",
+            building = "Bât. E",
+            type = "Cafétéria",
+            openHour = 7, openMinute = 30,
+            closeHour = 20, closeMinute = 0,
+            iconType = FacilityIcon.CAFE
+        )
     )
 
-    val semester = "Spring 2026 Semester"
+    val semester = "Semestre 2 - 2025/2026"
     val totalCredits = courses.sumOf { it.credits }
     val totalCourses = courses.size
 }

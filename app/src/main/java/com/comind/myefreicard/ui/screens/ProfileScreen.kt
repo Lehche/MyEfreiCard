@@ -9,7 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,20 +21,22 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.comind.myefreicard.data.SampleData
+import com.comind.myefreicard.data.SessionManager
 import com.comind.myefreicard.ui.theme.*
 
 @Composable
-fun ProfileScreen() {
-    val student = SampleData.student
+fun ProfileScreen(onLogoutTriggered: () -> Unit) {
+    val student = SessionManager.currentStudent
+    val profile = SessionManager.currentProfile
     val scrollState = rememberScrollState()
+    var isBiometricChecked by remember { mutableStateOf(SessionManager.isBiometricsEnabled) }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(BackgroundLight)
             .verticalScroll(scrollState)
-            .padding(bottom = 100.dp)
+            .padding(bottom = 120.dp)
     ) {
         // Title
         Text(
@@ -85,7 +87,7 @@ fun ProfileScreen() {
                             .background(PrimaryBlue.copy(alpha = 0.15f)),
                         contentAlignment = Alignment.Center
                     ) {
-                        Text("👤", fontSize = 32.sp)
+                        Text(profile.avatarEmoji, fontSize = 32.sp)
                     }
 
                     // Name and major on white bg
@@ -103,7 +105,7 @@ fun ProfileScreen() {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = student.major,
+                            text = student.program,
                             style = MaterialTheme.typography.bodyMedium,
                             color = TextSecondary
                         )
@@ -126,40 +128,31 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Academic Information
-        SectionCard(title = "Academic Information") {
+        SectionCard(title = "Informations académiques") {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicField(Icons.Outlined.Badge, "Student ID", student.studentId)
+                    AcademicField(Icons.Outlined.Badge, "N° Étudiant", student.studentId)
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicField(Icons.Outlined.School, "Year", "Junior")
+                    AcademicField(Icons.Outlined.School, "Année", student.year)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicField(Icons.Outlined.CalendarToday, "Date of Birth", student.dateOfBirth)
+                    AcademicField(Icons.Outlined.CalendarToday, "Date de naissance", student.dateOfBirth)
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicField(null, "GPA", student.gpa)
-                }
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.weight(1f)) {
-                    AcademicFieldText("Major", student.major)
-                }
-                Column(modifier = Modifier.weight(1f)) {
-                    AcademicFieldText("Minor", student.minor)
+                    AcademicField(null, "Moyenne générale", student.moyenneGenerale)
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             Row(modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicFieldText("Enrollment Date", student.enrollmentDate)
+                    AcademicFieldText("Date d'inscription", student.enrollmentDate)
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    AcademicFieldText("Expected Graduation", student.expectedGraduation)
+                    AcademicFieldText("Diplôme prévu", student.expectedGraduation)
                 }
             }
         }
@@ -167,15 +160,96 @@ fun ProfileScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Emergency Contact
-        SectionCard(title = "Emergency Contact") {
-            AcademicFieldText("Name", student.emergencyContactName)
+        SectionCard(title = "Contact d'urgence") {
+            AcademicFieldText("Nom", student.emergencyContactName)
             Spacer(modifier = Modifier.height(16.dp))
-            AcademicFieldText("Relationship", student.emergencyContactRelation)
+            AcademicFieldText("Lien", student.emergencyContactRelation)
             Spacer(modifier = Modifier.height(16.dp))
-            AcademicFieldText("Phone", student.emergencyContactPhone)
+            AcademicFieldText("Téléphone", student.emergencyContactPhone)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Security Preferences Card
+        SectionCard(title = "Sécurité") {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Fingerprint,
+                        contentDescription = "Biometrics",
+                        tint = TextSecondary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "Verrouillage par empreinte",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TextPrimary,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "Demander l'empreinte au démarrage",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextSecondary
+                        )
+                    }
+                }
+                Switch(
+                    checked = isBiometricChecked,
+                    onCheckedChange = { checked ->
+                        isBiometricChecked = checked
+                        SessionManager.isBiometricsEnabled = checked
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = SurfaceWhite,
+                        checkedTrackColor = PrimaryBlue,
+                        uncheckedThumbColor = TextTertiary,
+                        uncheckedTrackColor = BackgroundLight
+                    )
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Disconnect button
+        Button(
+            onClick = { onLogoutTriggered() },
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444)),
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .height(56.dp)
+                .shadow(8.dp, RoundedCornerShape(16.dp), ambientColor = Color(0xFFEF4444).copy(alpha = 0.3f))
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.ExitToApp,
+                    contentDescription = "Déconnexion",
+                    tint = Color.White,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Déconnexion",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
+                )
+            }
+        }
     }
 }
 

@@ -24,12 +24,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.comind.myefreicard.data.Course
-import com.comind.myefreicard.data.SampleData
+import com.comind.myefreicard.data.SessionManager
 import com.comind.myefreicard.ui.theme.*
 
 @Composable
 fun ScheduleScreen() {
     val scrollState = rememberScrollState()
+    val courses = SessionManager.currentCourses
+    val totalCredits = courses.sumOf { it.credits }
+    val totalCourses = courses.size
 
     Column(
         modifier = Modifier
@@ -46,7 +49,7 @@ fun ScheduleScreen() {
             color = TextPrimary
         )
         Text(
-            text = SampleData.semester,
+            text = "Semestre 2 - 2025/2026",
             style = MaterialTheme.typography.bodyMedium,
             color = TextSecondary,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -76,12 +79,12 @@ fun ScheduleScreen() {
             ) {
                 Column {
                     Text(
-                        text = "Total Credits",
+                        text = "Total ECTS",
                         style = MaterialTheme.typography.labelMedium,
                         color = TextOnPrimary.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "${SampleData.totalCredits}",
+                        text = "$totalCredits",
                         style = MaterialTheme.typography.displayLarge,
                         color = TextOnPrimary,
                         fontWeight = FontWeight.Bold
@@ -89,12 +92,12 @@ fun ScheduleScreen() {
                 }
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Total Courses",
+                        text = "Modules",
                         style = MaterialTheme.typography.labelMedium,
                         color = TextOnPrimary.copy(alpha = 0.8f)
                     )
                     Text(
-                        text = "${SampleData.totalCourses}",
+                        text = "$totalCourses",
                         style = MaterialTheme.typography.displayLarge,
                         color = TextOnPrimary,
                         fontWeight = FontWeight.Bold
@@ -106,7 +109,7 @@ fun ScheduleScreen() {
         Spacer(modifier = Modifier.height(16.dp))
 
         // Course Cards
-        SampleData.courses.forEach { course ->
+        courses.forEach { course ->
             CourseCard(course)
             Spacer(modifier = Modifier.height(12.dp))
         }
@@ -182,12 +185,18 @@ private fun CourseCard(course: Course) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Details
-            CourseDetailRow(Icons.Outlined.Person, course.professor)
-            Spacer(modifier = Modifier.height(6.dp))
-            CourseDetailRow(Icons.Outlined.AccessTime, course.time)
-            Spacer(modifier = Modifier.height(6.dp))
-            CourseDetailRow(Icons.Outlined.LocationOn, course.location)
+            // Details — only show if non-empty
+            if (course.professor.isNotBlank()) {
+                CourseDetailRow(Icons.Outlined.Person, course.professor)
+                Spacer(modifier = Modifier.height(6.dp))
+            }
+            if (course.time.isNotBlank()) {
+                CourseDetailRow(Icons.Outlined.AccessTime, course.time)
+                Spacer(modifier = Modifier.height(6.dp))
+            }
+            if (course.location.isNotBlank()) {
+                CourseDetailRow(Icons.Outlined.LocationOn, course.location)
+            }
         }
     }
 }

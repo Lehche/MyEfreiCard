@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efrei - Connexion SSO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0f305e;
+            --secondary-blue: #23528b;
+            --accent-blue: #3b82f6;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --error-red: #ef4444;
+            --green-success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-light);
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+        }
+
+        /* SCREEN 1: WELCOME SCREEN */
+        .screen {
+            flex: 0 0 100%;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .split-left {
+            width: 55%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* SVG Concentric rings backdrop */
+        .split-left::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: repeating-radial-gradient(circle, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 60px);
+            animation: rotateBg 40s linear infinite;
+        }
+
+        @keyframes rotateBg {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .brand-container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .dome-icon {
+            width: 90px;
+            height: 90px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .logo-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            font-style: italic;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .split-right {
+            width: 45%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px;
+            position: relative;
+        }
+
+        .welcome-content {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .welcome-badge {
+            display: inline-block;
+            background-color: #eff6ff;
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .welcome-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            line-height: 1.2;
+            margin-bottom: 16px;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .btn-primary {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 18px 30px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(15, 48, 94, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(15, 48, 94, 0.35);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .efrei-footer {
+            position: absolute;
+            bottom: 40px;
+            left: 80px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* SCREEN 2: LOGIN FORM */
+        .login-left-bg {
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15,48,94,0.9) 0%, rgba(35,82,139,0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 60px;
+            color: white;
+            position: relative;
+        }
+
+        .tagline-container {
+            max-width: 450px;
+            margin-top: auto;
+            margin-bottom: 40px;
+            z-index: 10;
+        }
+
+        .tagline-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 16px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .tagline-desc {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.85);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .login-card-container {
+            width: 45%;
+            height: 100%;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 80px 60px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .login-header {
+            margin-bottom: 32px;
+        }
+
+        .univ-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .logo-symbol {
+            width: 44px;
+            height: 44px;
+            fill: var(--primary-blue);
+        }
+
+        .logo-text-stacked {
+            color: var(--primary-blue);
+            line-height: 1.1;
+        }
+
+        .logo-text-stacked h4 {
+            font-weight: 800;
+            font-size: 1.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text-stacked p {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+        }
+
+        .login-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 6px;
+        }
+
+        .login-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Error Notification Banner */
+        .error-banner {
+            display: none;
+            background-color: #fef2f2;
+            border-left: 4px solid var(--error-red);
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: #991b1b;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 24px;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 10px;
+            margin-bottom: 28px;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* DEMO ACCOUNTS DRAWER */
+        .demo-drawer {
+            margin-top: 30px;
+            border: 1.5px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            background-color: var(--bg-light);
+        }
+
+        .demo-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .demo-btn {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            transition: all 0.2s ease;
+        }
+
+        .demo-btn:hover {
+            border-color: var(--accent-blue);
+            background-color: #eff6ff;
+        }
+
+        .demo-btn .name {
+            color: var(--text-main);
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+        }
+
+        .demo-btn .role {
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            font-weight: 500;
+        }
+
+        /* Mobile adaptation */
+        @media (max-width: 900px) {
+            .split-left, .login-left-bg {
+                display: none;
+            }
+            .split-right, .login-card-container {
+                width: 100%;
+                padding: 40px 24px;
+            }
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+            .logo-text {
+                font-size: 2.5rem;
+            }
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="pageContainer">
+        
+        <!-- SCREEN 1: WELCOME PAGE -->
+        <div class="screen" id="welcomeScreen">
+            <div class="split-left">
+                <div class="brand-container">
+                    <!-- SVG Dome Icon -->
+                    <svg class="dome-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="46" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="white" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M22 80H78" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M50 22H50.01" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="42" y1="50" x2="42" y2="80" stroke="white" stroke-width="2"/>
+                        <line x1="50" y1="46" x2="50" y2="80" stroke="white" stroke-width="2"/>
+                        <line x1="58" y1="50" x2="58" y2="80" stroke="white" stroke-width="2"/>
+                    </svg>
+                    <div class="logo-text">myefrei</div>
+                </div>
+            </div>
+            <div class="split-right">
+                <div class="welcome-content">
+                    <span class="welcome-badge">Plateforme Web</span>
+                    <h1 class="welcome-title">Bienvenue sur myEfrei</h1>
+                    <p class="welcome-subtitle">Retrouvez l’ensemble de vos services académiques, emploi du temps et carte étudiante.</p>
+                    <button class="btn-primary" onclick="goToLogin()">SE CONNECTER</button>
+                </div>
+                <div class="efrei-footer">
+                    &copy; 2026 Efrei Paris. Tous droits réservés.
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: LOGIN FORM -->
+        <div class="screen" id="loginScreen">
+            <div class="login-left-bg">
+                <div class="brand-container" style="text-align: left;">
+                    <div class="logo-text" style="font-size: 2.5rem; text-shadow: 0 4px 8px rgba(0,0,0,0.3);">myefrei</div>
+                </div>
+                <div class="tagline-container">
+                    <h2 class="tagline-title">Innover & Réussir</h2>
+                    <p class="tagline-desc">Connectez-vous à votre espace personnel pour accéder à vos cours, notes et services numériques sécurisés.</p>
+                </div>
+            </div>
+            
+            <div class="login-card-container">
+                <div class="login-header">
+                    <div class="univ-logo">
+                        <!-- Dome icon for logo -->
+                        <svg class="logo-symbol" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="46" stroke="#0f305e" stroke-width="6" fill="none"/>
+                            <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="#0f305e" stroke-width="6" fill="none"/>
+                            <path d="M20 80H80" stroke="#0f305e" stroke-width="6"/>
+                            <line x1="43" y1="50" x2="43" y2="80" stroke="#0f305e" stroke-width="3"/>
+                            <line x1="50" y1="46" x2="50" y2="80" stroke="#0f305e" stroke-width="3"/>
+                            <line x1="57" y1="50" x2="57" y2="80" stroke="#0f305e" stroke-width="3"/>
+                        </svg>
+                        <div class="logo-text-stacked">
+                            <h4>efrei</h4>
+                            <p>Paris Panthéon-Assas Université</p>
+                        </div>
+                    </div>
+                    
+                    <h1 class="login-title">Connexion</h1>
+                    <p class="login-subtitle">Utiliser votre compte Efrei unique</p>
+                </div>
+
+                <!-- Error Notification Banner -->
+                <div class="error-banner" id="errorBanner">
+                    Identifiant ou mot de passe incorrect. Veuillez réessayer.
+                </div>
+
+                <!-- Form -->
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Identifiant ou n° de dossier</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="text" id="username" placeholder="exemple@efrei.net" required autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="password">Mot de passe</label>
+                        <div class="input-wrapper">
+                            <input class="form-input" type="password" id="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <a href="#" class="forgot-link" onclick="alert('Veuillez contacter le support DSI Efrei.')">Identifiants oubliés ?</a>
+
+                    <button class="btn-primary" type="submit" style="padding: 16px;">SE CONNECTER</button>
+                </form>
+
+                <!-- DEMO DRAWER -->
+                <div class="demo-drawer">
+                    <div class="demo-title">
+                        <span style="font-size: 1.1rem;">⚡</span> Comptes de Démonstration (Click & Fill)
+                    </div>
+                    <div class="demo-grid">
+                        <button class="demo-btn" onclick="autofill('gaspard.dupont@efrei.net', 'gaspard_prepa')">
+                            <span class="name">Gaspard Dupont</span>
+                            <span class="role">Étudiant Prépa</span>
+                        </button>
+                        <button class="demo-btn" onclick="autofill('ada.lovelace@efrei.fr', 'cyber_queen_1815')">
+                            <span class="name">Ada Lovelace</span>
+                            <span class="role">Prof. Cyber & IA</span>
+                        </button>
+                        <button class="demo-btn" onclick="autofill('ethan.hunt@efrei.net', 'mission_impossible')">
+                            <span class="name">Ethan Hunt</span>
+                            <span class="role">Agent Secret</span>
+                        </button>
+                        <button class="demo-btn" onclick="autofill('neo@efrei.net', 'follow_the_white_rabbit')">
+                            <span class="name">Neo (Matrix)</span>
+                            <span class="role">L'Élu (The One)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const pageContainer = document.getElementById('pageContainer');
+        const errorBanner = document.getElementById('errorBanner');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+
+        function goToLogin() {
+            // Shift the slider container to the left to show Screen 2
+            pageContainer.style.transform = 'translateX(-50%)';
+        }
+
+        function autofill(username, password) {
+            usernameInput.value = username;
+            passwordInput.value = password;
+            errorBanner.style.display = 'none';
+        }
+
+        // Available profiles matching ProfilesData.kt
+        const validProfiles = [
+            { email: 'gaspard.dupont@efrei.net', pass: 'gaspard_prepa' },
+            { email: 'ada.lovelace@efrei.fr', pass: 'cyber_queen_1815' },
+            { email: 'ethan.hunt@efrei.net', pass: 'mission_impossible' },
+            { email: 'neo@efrei.net', pass: 'follow_the_white_rabbit' }
+        ];
+
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const inputEmail = usernameInput.value.trim().toLowerCase();
+            const inputPass = passwordInput.value;
+
+            // Find matching credentials
+            const match = validProfiles.find(p => p.email === inputEmail && p.pass === inputPass);
+
+            if (match) {
+                errorBanner.style.display = 'none';
+                
+                // Success redirect back to app using JS Interface
+                if (window.AndroidBridge && typeof window.AndroidBridge.onLoginSuccess === 'function') {
+                    window.AndroidBridge.onLoginSuccess(match.email);
+                } else {
+                    console.log('Login Success (Debug Mode outside WebView): ' + match.email);
+                    alert('Connexion réussie en mode de développement ! Active profile: ' + match.email);
+                }
+            } else {
+                // Show shake animation and red alert
+                errorBanner.style.display = 'block';
+                // Trigger shake animation reflow
+                errorBanner.style.animation = 'none';
+                errorBanner.offsetHeight; /* trigger reflow */
+                errorBanner.style.animation = 'shake 0.5s ease-in-out';
+            }
+        }
+    </script>
+</body>
+</html>
