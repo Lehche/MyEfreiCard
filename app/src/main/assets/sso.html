@@ -2,9 +2,8 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Efrei - Connexion SSO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #0f305e;
@@ -22,7 +21,7 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -35,119 +34,103 @@
 
         .container {
             display: flex;
-            width: 100%;
+            width: 200%;
             height: 100%;
             position: relative;
-            transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* SCREEN 1: WELCOME SCREEN */
+        /* SCREENS */
         .screen {
-            flex: 0 0 100%;
-            width: 100%;
+            flex: 0 0 50%;
+            width: 50%;
             height: 100%;
-            display: flex;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .split-left {
-            width: 55%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, var(--secondary-blue) 0%, var(--primary-blue) 100%);
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* =====================================
+           SCREEN 1: WELCOME SCREEN (Mobile-first)
+           ===================================== */
+        #welcomeScreen {
+            background: linear-gradient(145deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, #1a5276 100%);
             justify-content: center;
             align-items: center;
-            color: white;
             position: relative;
-            overflow: hidden;
         }
 
-        /* SVG Concentric rings backdrop */
-        .split-left::before {
+        /* Subtle background pattern */
+        #welcomeScreen::before {
             content: '';
             position: absolute;
-            width: 150%;
-            height: 150%;
-            background: repeating-radial-gradient(circle, rgba(255,255,255,0.02) 0px, rgba(255,255,255,0.02) 2px, transparent 2px, transparent 60px);
-            animation: rotateBg 40s linear infinite;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-radial-gradient(circle, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 50px);
+            pointer-events: none;
         }
 
-        @keyframes rotateBg {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .brand-container {
-            text-align: center;
+        .welcome-body {
+            position: relative;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 30px;
+            text-align: center;
         }
 
         .dome-icon {
-            width: 90px;
-            height: 90px;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
             animation: float 4s ease-in-out infinite;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
 
         .logo-text {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            letter-spacing: -2px;
+            letter-spacing: -1.5px;
             font-style: italic;
-            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .split-right {
-            width: 45%;
-            height: 100%;
-            background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px;
-            position: relative;
-        }
-
-        .welcome-content {
-            max-width: 400px;
-            margin: 0 auto;
+            color: white;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin-bottom: 8px;
         }
 
         .welcome-badge {
             display: inline-block;
-            background-color: #eff6ff;
-            color: var(--accent-blue);
+            background-color: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            font-size: 0.85rem;
-            padding: 6px 16px;
+            font-size: 0.75rem;
+            padding: 5px 14px;
             border-radius: 50px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             letter-spacing: 1px;
             text-transform: uppercase;
+            backdrop-filter: blur(4px);
         }
 
         .welcome-title {
-            font-size: 2.2rem;
+            font-size: 1.6rem;
             font-weight: 800;
-            color: var(--primary-blue);
-            line-height: 1.2;
-            margin-bottom: 16px;
+            color: white;
+            line-height: 1.25;
+            margin-bottom: 10px;
         }
 
         .welcome-subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            line-height: 1.6;
-            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            max-width: 300px;
         }
 
         .btn-primary {
@@ -155,131 +138,97 @@
             align-items: center;
             justify-content: center;
             width: 100%;
-            background-color: var(--primary-blue);
-            color: white;
+            max-width: 300px;
+            background-color: white;
+            color: var(--primary-blue);
             border: none;
-            padding: 18px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            padding: 16px 30px;
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(15, 48, 94, 0.25);
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary-blue);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(15, 48, 94, 0.35);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary:active {
-            transform: translateY(0);
+            transform: scale(0.97);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .efrei-footer {
             position: absolute;
-            bottom: 40px;
-            left: 80px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        /* SCREEN 2: LOGIN FORM */
-        .login-left-bg {
-            width: 55%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(15,48,94,0.9) 0%, rgba(35,82,139,0.85) 100%), 
-                        url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=1470&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 60px;
-            color: white;
-            position: relative;
-        }
-
-        .tagline-container {
-            max-width: 450px;
-            margin-top: auto;
-            margin-bottom: 40px;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.7rem;
             z-index: 10;
+            white-space: nowrap;
         }
 
-        .tagline-title {
-            font-size: 2.8rem;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 16px;
-            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
-        }
-
-        .tagline-desc {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.85);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .login-card-container {
-            width: 45%;
-            height: 100%;
+        /* =====================================
+           SCREEN 2: LOGIN FORM (Mobile-first)
+           ===================================== */
+        #loginScreen {
             background-color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 80px 60px;
-            position: relative;
-            overflow-y: auto;
+            padding: 0;
         }
 
-        .login-header {
-            margin-bottom: 32px;
+        .login-header-banner {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            padding: 32px 24px 24px;
+            position: relative;
         }
 
         .univ-logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .logo-symbol {
-            width: 44px;
-            height: 44px;
-            fill: var(--primary-blue);
+            width: 36px;
+            height: 36px;
+            fill: white;
         }
 
         .logo-text-stacked {
-            color: var(--primary-blue);
+            color: white;
             line-height: 1.1;
         }
 
         .logo-text-stacked h4 {
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             letter-spacing: -0.5px;
         }
 
         .logo-text-stacked p {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             font-weight: 600;
             letter-spacing: 0.5px;
-            opacity: 0.7;
+            opacity: 0.75;
         }
 
         .login-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-blue);
-            margin-bottom: 6px;
+            color: white;
+            margin-bottom: 4px;
         }
 
         .login-subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.85rem;
+        }
+
+        .login-form-body {
+            padding: 24px;
+            flex: 1;
         }
 
         /* Error Notification Banner */
@@ -287,89 +236,103 @@
             display: none;
             background-color: #fef2f2;
             border-left: 4px solid var(--error-red);
-            padding: 12px 16px;
+            padding: 12px 14px;
             border-radius: 8px;
             color: #991b1b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 500;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             animation: shake 0.5s ease-in-out;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20%, 60% { transform: translateX(-5px); }
-            40%, 80% { transform: translateX(5px); }
+            20%, 60% { transform: translateX(-4px); }
+            40%, 80% { transform: translateX(4px); }
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text-main);
         }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
         .form-input {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: 1.5px solid var(--border-color);
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
+            background-color: var(--bg-light);
         }
 
         .form-input:focus {
             border-color: var(--accent-blue);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            background-color: white;
         }
 
         .forgot-link {
             display: block;
             text-align: right;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--accent-blue);
             font-weight: 600;
             text-decoration: none;
-            margin-top: 10px;
-            margin-bottom: 28px;
+            margin-top: 8px;
+            margin-bottom: 20px;
         }
 
-        .forgot-link:hover {
-            text-decoration: underline;
+        .btn-submit {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(15, 48, 94, 0.25);
+            transition: all 0.25s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-submit:active {
+            transform: scale(0.97);
         }
 
         /* DEMO ACCOUNTS DRAWER */
         .demo-drawer {
-            margin-top: 30px;
+            margin-top: 24px;
             border: 1.5px dashed var(--border-color);
             border-radius: 12px;
-            padding: 16px;
+            padding: 14px;
             background-color: var(--bg-light);
         }
 
         .demo-title {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             color: var(--primary-blue);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .demo-grid {
@@ -381,9 +344,9 @@
         .demo-btn {
             background-color: white;
             border: 1px solid var(--border-color);
-            padding: 10px;
+            padding: 10px 8px;
             border-radius: 8px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
             display: flex;
@@ -392,41 +355,21 @@
             transition: all 0.2s ease;
         }
 
-        .demo-btn:hover {
+        .demo-btn:active {
             border-color: var(--accent-blue);
             background-color: #eff6ff;
         }
 
         .demo-btn .name {
             color: var(--text-main);
-            font-size: 0.8rem;
-            margin-bottom: 2px;
+            font-size: 0.75rem;
+            margin-bottom: 1px;
         }
 
         .demo-btn .role {
             color: var(--text-muted);
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 500;
-        }
-
-        /* Mobile adaptation */
-        @media (max-width: 900px) {
-            .split-left, .login-left-bg {
-                display: none;
-            }
-            .split-right, .login-card-container {
-                width: 100%;
-                padding: 40px 24px;
-            }
-            .welcome-title {
-                font-size: 1.8rem;
-            }
-            .logo-text {
-                font-size: 2.5rem;
-            }
-            .demo-grid {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -434,70 +377,52 @@
 
     <div class="container" id="pageContainer">
         
-        <!-- SCREEN 1: WELCOME PAGE -->
+        <!-- SCREEN 1: WELCOME PAGE (Mobile-first) -->
         <div class="screen" id="welcomeScreen">
-            <div class="split-left">
-                <div class="brand-container">
-                    <!-- SVG Dome Icon -->
-                    <svg class="dome-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="46" stroke="white" stroke-width="4" stroke-linecap="round"/>
-                        <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="white" stroke-width="4" stroke-linejoin="round"/>
-                        <path d="M22 80H78" stroke="white" stroke-width="4" stroke-linecap="round"/>
-                        <path d="M50 22H50.01" stroke="white" stroke-width="6" stroke-linecap="round"/>
-                        <line x1="42" y1="50" x2="42" y2="80" stroke="white" stroke-width="2"/>
-                        <line x1="50" y1="46" x2="50" y2="80" stroke="white" stroke-width="2"/>
-                        <line x1="58" y1="50" x2="58" y2="80" stroke="white" stroke-width="2"/>
-                    </svg>
-                    <div class="logo-text">myefrei</div>
-                </div>
+            <div class="welcome-body">
+                <!-- SVG Dome Icon -->
+                <svg class="dome-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="46" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="white" stroke-width="4" stroke-linejoin="round"/>
+                    <path d="M22 80H78" stroke="white" stroke-width="4" stroke-linecap="round"/>
+                    <path d="M50 22H50.01" stroke="white" stroke-width="6" stroke-linecap="round"/>
+                    <line x1="42" y1="50" x2="42" y2="80" stroke="white" stroke-width="2"/>
+                    <line x1="50" y1="46" x2="50" y2="80" stroke="white" stroke-width="2"/>
+                    <line x1="58" y1="50" x2="58" y2="80" stroke="white" stroke-width="2"/>
+                </svg>
+                <div class="logo-text">myefrei</div>
+                <span class="welcome-badge">Plateforme Web</span>
+                <h1 class="welcome-title">Bienvenue sur myEfrei</h1>
+                <p class="welcome-subtitle">Retrouvez l'ensemble de vos services académiques, emploi du temps et carte étudiante.</p>
+                <button class="btn-primary" onclick="goToLogin()">SE CONNECTER</button>
             </div>
-            <div class="split-right">
-                <div class="welcome-content">
-                    <span class="welcome-badge">Plateforme Web</span>
-                    <h1 class="welcome-title">Bienvenue sur myEfrei</h1>
-                    <p class="welcome-subtitle">Retrouvez l’ensemble de vos services académiques, emploi du temps et carte étudiante.</p>
-                    <button class="btn-primary" onclick="goToLogin()">SE CONNECTER</button>
-                </div>
-                <div class="efrei-footer">
-                    &copy; 2026 Efrei Paris. Tous droits réservés.
-                </div>
-            </div>
+            <div class="efrei-footer">&copy; 2026 Efrei Paris. Tous droits réservés.</div>
         </div>
 
-        <!-- SCREEN 2: LOGIN FORM -->
+        <!-- SCREEN 2: LOGIN FORM (Mobile-first) -->
         <div class="screen" id="loginScreen">
-            <div class="login-left-bg">
-                <div class="brand-container" style="text-align: left;">
-                    <div class="logo-text" style="font-size: 2.5rem; text-shadow: 0 4px 8px rgba(0,0,0,0.3);">myefrei</div>
-                </div>
-                <div class="tagline-container">
-                    <h2 class="tagline-title">Innover & Réussir</h2>
-                    <p class="tagline-desc">Connectez-vous à votre espace personnel pour accéder à vos cours, notes et services numériques sécurisés.</p>
-                </div>
-            </div>
-            
-            <div class="login-card-container">
-                <div class="login-header">
-                    <div class="univ-logo">
-                        <!-- Dome icon for logo -->
-                        <svg class="logo-symbol" viewBox="0 0 100 100">
-                            <circle cx="50" cy="50" r="46" stroke="#0f305e" stroke-width="6" fill="none"/>
-                            <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="#0f305e" stroke-width="6" fill="none"/>
-                            <path d="M20 80H80" stroke="#0f305e" stroke-width="6"/>
-                            <line x1="43" y1="50" x2="43" y2="80" stroke="#0f305e" stroke-width="3"/>
-                            <line x1="50" y1="46" x2="50" y2="80" stroke="#0f305e" stroke-width="3"/>
-                            <line x1="57" y1="50" x2="57" y2="80" stroke="#0f305e" stroke-width="3"/>
-                        </svg>
-                        <div class="logo-text-stacked">
-                            <h4>efrei</h4>
-                            <p>Paris Panthéon-Assas Université</p>
-                        </div>
+            <div class="login-header-banner">
+                <div class="univ-logo">
+                    <!-- Dome icon for logo -->
+                    <svg class="logo-symbol" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="46" stroke="white" stroke-width="6" fill="none"/>
+                        <path d="M50 15V22M50 22C41.7157 22 35 28.7157 35 37V80H65V37C65 28.7157 58.2843 22 50 22Z" stroke="white" stroke-width="6" fill="none"/>
+                        <path d="M20 80H80" stroke="white" stroke-width="6"/>
+                        <line x1="43" y1="50" x2="43" y2="80" stroke="white" stroke-width="3"/>
+                        <line x1="50" y1="46" x2="50" y2="80" stroke="white" stroke-width="3"/>
+                        <line x1="57" y1="50" x2="57" y2="80" stroke="white" stroke-width="3"/>
+                    </svg>
+                    <div class="logo-text-stacked">
+                        <h4>efrei</h4>
+                        <p>Paris Panthéon-Assas Université</p>
                     </div>
-                    
-                    <h1 class="login-title">Connexion</h1>
-                    <p class="login-subtitle">Utiliser votre compte Efrei unique</p>
                 </div>
+                
+                <h1 class="login-title">Connexion</h1>
+                <p class="login-subtitle">Utiliser votre compte Efrei unique</p>
+            </div>
 
+            <div class="login-form-body">
                 <!-- Error Notification Banner -->
                 <div class="error-banner" id="errorBanner">
                     Identifiant ou mot de passe incorrect. Veuillez réessayer.
@@ -507,43 +432,39 @@
                 <form onsubmit="handleLoginSubmit(event)">
                     <div class="form-group">
                         <label class="form-label" for="username">Identifiant ou n° de dossier</label>
-                        <div class="input-wrapper">
-                            <input class="form-input" type="text" id="username" placeholder="exemple@efrei.net" required autocomplete="email">
-                        </div>
+                        <input class="form-input" type="text" id="username" placeholder="exemple@efrei.net" required autocomplete="email">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label" for="password">Mot de passe</label>
-                        <div class="input-wrapper">
-                            <input class="form-input" type="password" id="password" placeholder="••••••••" required>
-                        </div>
+                        <input class="form-input" type="password" id="password" placeholder="••••••••" required>
                     </div>
 
-                    <a href="#" class="forgot-link" onclick="alert('Veuillez contacter le support DSI Efrei.')">Identifiants oubliés ?</a>
+                    <a href="#" class="forgot-link" onclick="event.preventDefault(); alert('Veuillez contacter le support DSI Efrei.')">Identifiants oubliés ?</a>
 
-                    <button class="btn-primary" type="submit" style="padding: 16px;">SE CONNECTER</button>
+                    <button class="btn-submit" type="submit">SE CONNECTER</button>
                 </form>
 
                 <!-- DEMO DRAWER -->
                 <div class="demo-drawer">
                     <div class="demo-title">
-                        <span style="font-size: 1.1rem;">⚡</span> Comptes de Démonstration (Click & Fill)
+                        <span style="font-size: 1rem;">⚡</span> Comptes de Démonstration
                     </div>
                     <div class="demo-grid">
                         <button class="demo-btn" onclick="autofill('gaspard.dupont@efrei.net', 'gaspard_prepa')">
-                            <span class="name">Gaspard Dupont</span>
+                            <span class="name">🧑‍💻 Gaspard Dupont</span>
                             <span class="role">Étudiant Prépa</span>
                         </button>
                         <button class="demo-btn" onclick="autofill('ada.lovelace@efrei.fr', 'cyber_queen_1815')">
-                            <span class="name">Ada Lovelace</span>
+                            <span class="name">👩‍🏫 Ada Lovelace</span>
                             <span class="role">Prof. Cyber & IA</span>
                         </button>
                         <button class="demo-btn" onclick="autofill('ethan.hunt@efrei.net', 'mission_impossible')">
-                            <span class="name">Ethan Hunt</span>
+                            <span class="name">🕵️‍♂️ Ethan Hunt</span>
                             <span class="role">Agent Secret</span>
                         </button>
                         <button class="demo-btn" onclick="autofill('neo@efrei.net', 'follow_the_white_rabbit')">
-                            <span class="name">Neo (Matrix)</span>
+                            <span class="name">🕶️ Neo (Matrix)</span>
                             <span class="role">L'Élu (The One)</span>
                         </button>
                     </div>
@@ -560,7 +481,7 @@
         const passwordInput = document.getElementById('password');
 
         function goToLogin() {
-            // Shift the slider container to the left to show Screen 2
+            // Shift the container to show Screen 2 (each screen is 50% of 200% container = 100vw)
             pageContainer.style.transform = 'translateX(-50%)';
         }
 

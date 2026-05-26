@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.comind.myefreicard.data.Facility
 import com.comind.myefreicard.data.FacilityIcon
-import com.comind.myefreicard.data.Facility
-import com.comind.myefreicard.data.FacilityIcon
 import com.comind.myefreicard.data.SessionManager
 import com.comind.myefreicard.ui.theme.*
 import kotlinx.coroutines.delay
